@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation Détaillée MFAI MVP - Hackathon</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        .timeline {
+            border-left: 4px solid #2c3e50;
+            padding-left: 20px;
+            margin: 20px 0;
+        }
+        .phase {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .code-block {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            position: relative;
+            margin: 10px 0;
+        }
+        .copy-button {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            padding: 5px 10px;
+            background: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .copy-button:hover {
+            background: #34495e;
+        }
+        .success-message {
+            display: none;
+            color: green;
+            margin-top: 5px;
+        }
+        .checklist {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .checklist li {
+            margin: 10px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+        .checklist li:before {
+            content: "☐";
+            position: absolute;
+            left: 0;
+        }
+        .checklist li.checked:before {
+            content: "☑";
+            color: green;
+        }
+        .file-structure {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+        .step {
+            border-left: 4px solid #3498db;
+            padding-left: 20px;
+            margin: 20px 0;
+        }
+        .note {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .warning {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .success {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: 1px solid #ddd;
+            margin-right: 5px;
+        }
+        .tab.active {
+            background: #2c3e50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Documentation Détaillée MFAI MVP - Hackathon</h1>
+
+    <div class="tabs">
+        <div class="tab active" onclick="showTab('structure')">Structure du Projet</div>
+        <div class="tab" onclick="showTab('development')">Développement</div>
+        <div class="tab" onclick="showTab('testing')">Tests</div>
+        <div class="tab" onclick="showTab('deployment')">Déploiement</div>
+        <div class="tab" onclick="showTab('simulation')">Simulation</div>
+    </div>
+
+    <div id="structure" class="tab-content active">
+        <h2>Structure du Projet</h2>
+        
+        <div class="note">
+            <p>Cette section présente l'architecture complète du projet MFAI MVP. La structure est organisée de manière modulaire pour séparer clairement les composants BSC (Binance Smart Chain) et Solana. Cette organisation facilite le développement, les tests et le déploiement de chaque partie du projet de manière indépendante, tout en maintenant une cohérence globale.</p>
+        </div>
+
+        <div class="file-structure">
+            <pre>
+MFAI_MVP_Pitch_Test_API/
+├── contracts/
+│   ├── MFAIToken.sol
+│   └── MFAIStaking.sol
+├── scripts/
+│   ├── deploy-token.js
+│   ├── deploy-staking.js
+│   ├── setup-layerzero.js
+│   └── test-cross-chain.js
+├── solana/
+│   └── nft-program/
+│       ├── src/
+│       │   └── lib.rs
+│       └── Cargo.toml
+├── test/
+│   └── MFAIStaking.test.js
+├── hardhat.config.js
+├── package.json
+└── .env
+            </pre>
+        </div>
+
+        <div class="step">
+            <h3>1. Configuration Initiale</h3>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copier</button>
+                <pre><code># Création du projet
+mkdir MFAI_MVP_Pitch_Test_API
+cd MFAI_MVP_Pitch_Test_API
+
+# Initialisation du projet Node.js
+npm init -y
+
+# Installation des dépendances
+npm install --save-dev hardhat @nomiclabs/hardhat-waffle ethereum-waffle chai @nomiclabs/hardhat-ethers ethers @openzeppelin/contracts @layerzerolabs/solidity-examples</code></pre>
+                <div class="success-message">Code copié !</div>
+            </div>
+        </div>
+
+        <div class="step">
+            <h3>2. Configuration de l'Environnement</h3>
+            <div class="note">
+                Créez un fichier .env à la racine du projet avec les variables suivantes :
+            </div>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copier</button>
+                <pre><code># Network Configuration
+BSC_TESTNET_RPC_URL=https://data-seed-prebsc-1-s1.binance.org:8545/
+BSC_TESTNET_CHAIN_ID=97
+
+# LayerZero Configuration
+LZ_ENDPOINT_SOLANA_DEVNET=
+
+# Solana Configuration
+SOLANA_NETWORK=devnet
+PHANTOM_WALLET_ENDPOINT=https://phantom.app/
+SOLANA_NFT_PROGRAM=
+
+# Contract Addresses (à remplir après le déploiement)
+TOKEN_ADDRESS=
+STAKING_ADDRESS=</code></pre>
+                <div class="success-message">Code copié !</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="development" class="tab-content">
+        <h2>Processus de Développement</h2>
+
+        <div class="note">
+            <p>Le processus de développement est divisé en trois composants principaux : le token MFAI, le contrat de staking, et le programme NFT Solana. Chaque composant est développé en utilisant les meilleures pratiques de son écosystème respectif. Le token et le staking sont développés en Solidity pour BSC, tandis que le programme NFT est développé en Rust pour Solana. L'intégration LayerZero permet la communication cross-chain entre ces composants.</p>
+        </div>
+
+        <div class="step">
+            <h3>1. Développement du Token MFAI (MFAIToken.sol)</h3>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copier</button>
+                <pre><code>// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@layerzerolabs/solidity-examples/contracts/lzApp/NonblockingLzApp.sol";
+
+contract MFAIToken is ERC20, NonblockingLzApp {
+    constructor(address _endpoint) ERC20("MFAI Token", "MFAI") NonblockingLzApp(_endpoint) {
+        _mint(msg.sender, 1000000 * 10 ** decimals());
+    }
+
+    function _nonblockingLzReceive(uint16 _srcChainId, bytes memory _srcAddress, uint64 _nonce, bytes memory _payload) internal override {
+        // Logique de réception cross-chain
+    }
+
+    function _lzSend(uint16 _dstChainId, bytes memory _payload, address payable _refundAddress, address _zroPaymentAddress, bytes memory _adapterParams) internal override {
+        // Logique d'envoi cross-chain
+    }
+}</code></pre>
+                <div class="success-message">Code copié !</div>
+            </div>
+        </div>
+
+        <div class="step">
+            <h3>2. Développement du Contrat de Staking (MFAIStaking.sol)</h3>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copier</button>
+                <pre><code>// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@layerzerolabs/solidity-examples/contracts/lzApp/NonblockingLzApp.sol";
+
+contract MFAIStaking is ReentrancyGuard, NonblockingLzApp {
+    IERC20 public stakingToken;
+    uint256 public rewardRate;
+    mapping(address => uint256) public stakedAmount;
+    mapping(address => uint256) public lastUpdateTime;
+    mapping(address => uint256) public rewards;
+
+    event Staked(address indexed user, uint256 amount);
+    event Withdrawn(address indexed user, uint256 amount);
+    event RewardPaid(address indexed user, uint256 reward);
+
+    constructor(address _stakingToken, address _endpoint) NonblockingLzApp(_endpoint) {
+        stakingToken = IERC20(_stakingToken);
+        rewardRate = 100; // 100 tokens par jour
+    }
+
+    // ... Reste du code du contrat de staking ...</code></pre>
+                <div class="success-message">Code copié !</div>
+            </div>
+        </div>
+
+        <div class="step">
+            <h3>3. Développement du Programme NFT Solana (lib.rs)</h3>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copier</button>
+                <pre><code>use solana_program::{
+    account_info::AccountInfo,
+    entrypoint,
+    entrypoint::ProgramResult,
+    pubkey::Pubkey,
+    msg,
+};
+use spl_token::state::Account as TokenAccount;
+use spl_associated_token_account::instruction as ata_instruction;
+
+entrypoint!(process_instruction);
+
+#[derive(Debug)]
+pub enum NFTInstruction {
+    CreateNFT,
+    UpdateNFTTier,
+    GetNFTInfo,
+}
+
+pub fn process_instruction(
+    program_id: &Pubkey,
+    accounts: &[AccountInfo],
+    instruction_data: &[u8],
+) -> ProgramResult {
+    // ... Logique du programme NFT ...</code></pre>
+                <div class="success-message">Code copié !</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="testing" class="tab-content">
+        <h2>Processus de Test</h2>
+
+        <div class="note">
+            <p>Les tests sont essentiels pour garantir la fiabilité et la sécurité de l'application. Cette section couvre les tests unitaires pour les contrats BSC et le programme Solana. Les tests sont conçus pour vérifier toutes les fonctionnalités critiques, y compris la création de NFT, le staking, les récompenses, et la communication cross-chain. Chaque test est documenté avec des cas d'utilisation spécifiques et des scénarios d'erreur.</p>
+        </div>
+
+        <div class="step">
+            <h3>1. Tests Unitaires BSC</h3>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copier</button>
+                <pre><code>const { expect } = require("chai");
+const { ethers } = require("hardhat");
+
+describe("MFAIStaking", function () {
+    let MFAIToken;
+    let MFAIStaking;
+    let token;
+    let staking;
+    let owner;
+    let addr1;
+    let addr2;
+
+    beforeEach(async function () {
+        [owner, addr1, addr2] = await ethers.getSigners();
+        
+        MFAIToken = await ethers.getContractFactory("MFAIToken");
+        token = await MFAIToken.deploy("0x..."); // LayerZero endpoint
+        
+        MFAIStaking = await ethers.getContractFactory("MFAIStaking");
+        staking = await MFAIStaking.deploy(token.address, "0x..."); // LayerZero endpoint
+    });
+
+    describe("Staking", function () {
+        it("Should allow users to stake tokens", async function () {
+            // ... Tests de staking ...
+        });
+
+        it("Should calculate rewards correctly", async function () {
+            // ... Tests de récompenses ...
+        });
+    });
+});</code></pre>
+                <div class="success-message">Code copié !</div>
+            </div>
+        </div>
+
+        <div class="step">
+            <h3>2. Tests du Programme NFT Solana</h3>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copier</button>
+                <pre><code>#[cfg(test)]
+mod tests {
+    use super::*;
+    use solana_program::clock::Epoch;
+
+    #[test]
+    fn test_create_nft() {
+        // ... Tests de création NFT ...
+    }
+
+    #[test]
+    fn test_update_nft_tier() {
+        // ... Tests de mise à jour NFT ...
+    }
+}</code></pre>
+                <div class="success-message">Code copié !</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="deployment" class="tab-content">
+        <h2>Processus de Déploiement</h2>
+
+        <div class="note">
+            <p>Le déploiement est effectué sur deux réseaux distincts : BSC Testnet pour les smart contracts et Solana Devnet pour le programme NFT. Cette section détaille les étapes de déploiement pour chaque plateforme, incluant la compilation, la vérification et la configuration des contrats. Une attention particulière est portée à la configuration des trusted remote addresses pour LayerZero, cruciale pour la communication cross-chain.</p>
+        </div>
+
+        <div class="step">
+            <h3>1. Déploiement sur BSC Testnet</h3>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copier</button>
+                <pre><code>async function main() {
+    const [deployer] = await ethers.getSigners();
+    console.log("Deploying contracts with account:", deployer.address);
+
+    // Déploiement du Token
+    const MFAIToken = await ethers.getContractFactory("MFAIToken");
+    const token = await MFAIToken.deploy(process.env.LZ_ENDPOINT_BSC_TESTNET);
+    await token.deployed();
+    console.log("MFAIToken deployed to:", token.address);
+
+    // Déploiement du Staking
+    const MFAIStaking = await ethers.getContractFactory("MFAIStaking");
+    const staking = await MFAIStaking.deploy(token.address, process.env.LZ_ENDPOINT_BSC_TESTNET);
+    await staking.deployed();
+    console.log("MFAIStaking deployed to:", staking.address);
+}</code></pre>
+                <div class="success-message">Code copié !</div>
+            </div>
+        </div>
+
+        <div class="step">
+            <h3>2. Déploiement sur Solana Devnet</h3>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copier</button>
+                <pre><code># Compilation du programme
+cd solana/nft-program
+cargo build-bpf
+
+# Déploiement
+solana program deploy target/deploy/mfai_nft_program.so
+
+# Vérification
+solana program show --programs</code></pre>
+                <div class="success-message">Code copié !</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="simulation" class="tab-content">
+        <h2>Processus de Simulation</h2>
+
+        <div class="note">
+            <p>La simulation permet de tester l'ensemble du flux d'utilisation de l'application dans un environnement contrôlé. Cette section couvre la simulation de la communication cross-chain et le flux complet d'utilisation, de la création de NFT sur Solana au staking sur BSC. Les simulations sont conçues pour valider l'intégration des différents composants et identifier d'éventuels problèmes avant le déploiement en production.</p>
+        </div>
+
+        <div class="step">
+            <h3>1. Simulation de la Communication Cross-Chain</h3>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copier</button>
+                <pre><code>async function main() {
+    const [deployer] = await ethers.getSigners();
+    
+    // Récupération des contrats
+    const token = await ethers.getContractAt("MFAIToken", process.env.TOKEN_ADDRESS);
+    const staking = await ethers.getContractAt("MFAIStaking", process.env.STAKING_ADDRESS);
+
+    // Simulation d'un message cross-chain
+    const message = ethers.utils.toUtf8Bytes("Test message");
+    await token.send(
+        process.env.SOLANA_CHAIN_ID,
+        process.env.SOLANA_NFT_PROGRAM,
+        message,
+        deployer.address,
+        ethers.constants.AddressZero,
+        "0x"
+    );
+
+    console.log("Cross-chain message sent successfully");
+}</code></pre>
+                <div class="success-message">Code copié !</div>
+            </div>
+        </div>
+
+        <div class="step">
+            <h3>2. Simulation du Flux Complet</h3>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copier</button>
+                <pre><code>async function simulateFullFlow() {
+    // 1. Création d'un NFT sur Solana
+    const nftProgram = new web3.PublicKey(process.env.SOLANA_NFT_PROGRAM);
+    // ... Code de création NFT ...
+
+    // 2. Staking de tokens sur BSC
+    const stakingAmount = ethers.utils.parseEther("1000");
+    await staking.stake(stakingAmount);
+
+    // 3. Communication cross-chain
+    await token.send(
+        process.env.SOLANA_CHAIN_ID,
+        process.env.SOLANA_NFT_PROGRAM,
+        ethers.utils.toUtf8Bytes("Staking completed"),
+        deployer.address,
+        ethers.constants.AddressZero,
+        "0x"
+    );
+
+    console.log("Full flow simulation completed");
+}</code></pre>
+                <div class="success-message">Code copié !</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+            document.querySelector(`.tab[onclick="showTab('${tabId}')"]`).classList.add('active');
+        }
+
+        function copyCode(button) {
+            const codeBlock = button.nextElementSibling;
+            const code = codeBlock.textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                const successMessage = button.parentElement.querySelector('.success-message');
+                successMessage.style.display = 'block';
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html> 
