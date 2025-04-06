@@ -1,7 +1,7 @@
 require("@nomiclabs/hardhat-waffle");
 require("@nomiclabs/hardhat-ethers");
 require('dotenv').config();
-const { getNetworkConfig } = require("./scripts/utils/network-config");
+const { getNetworkConfig, isNetworkEnabled } = require("./scripts/utils/network-config");
 
 // Validation des variables d'environnement requises
 const requiredEnvVars = [
@@ -18,7 +18,9 @@ for (const envVar of requiredEnvVars) {
 
 // Obtenir les configurations des réseaux
 const bscConfig = getNetworkConfig('bsc');
-const ethereumConfig = getNetworkConfig('ethereum');
+// Vérifier si ethereum est activé avant de récupérer sa configuration
+const ethereumEnabled = isNetworkEnabled('ethereum');
+const ethereumConfig = ethereumEnabled ? getNetworkConfig('ethereum') : { rpcUrl: '', chainId: 1 };
 
 // Configuration des réseaux
 const config = {
@@ -34,7 +36,7 @@ const config = {
   networks: {
     hardhat: {
       chainId: process.env.FORK_CHAIN_ID ? parseInt(process.env.FORK_CHAIN_ID) : 1337,
-      forking: process.env.FORK_ENABLED === 'true' ? {
+      forking: process.env.FORK_ENABLED === 'true' && ethereumEnabled ? {
         url: ethereumConfig.rpcUrl,
         blockNumber: process.env.FORK_BLOCK_NUMBER === 'latest' ? undefined : parseInt(process.env.FORK_BLOCK_NUMBER)
       } : undefined,
@@ -44,19 +46,6 @@ const config = {
     localhost: {
       url: "http://127.0.0.1:8545",
       accounts: process.env.TEST_PRIVATE_KEY ? [process.env.TEST_PRIVATE_KEY] : undefined
-    },
-    // Ethereum networks
-    ethereum: {
-      url: ethereumConfig.rpcUrl,
-      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
-      chainId: ethereumConfig.chainId,
-      gasPrice: process.env.GAS_PRICE === 'auto' ? 'auto' : parseInt(process.env.GAS_PRICE)
-    },
-    goerli: {
-      url: ethereumConfig.rpcUrl,
-      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
-      chainId: ethereumConfig.chainId,
-      gasPrice: process.env.GAS_PRICE === 'auto' ? 'auto' : parseInt(process.env.GAS_PRICE)
     },
     // BSC networks
     bsc: {
@@ -74,8 +63,6 @@ const config = {
   },
   etherscan: {
     apiKey: {
-      mainnet: process.env.ETHERSCAN_API_KEY,
-      goerli: process.env.ETHERSCAN_API_KEY,
       bsc: process.env.BSCSCAN_API_KEY,
       bscTestnet: process.env.BSCSCAN_API_KEY
     }
@@ -91,5 +78,23 @@ const config = {
   }
 };
 
+// Ajouter conditionnellement les réseaux Ethereum
+if (ethereumEnabled) {
+  config.networks.ethereum = {
+    url: ethereumConfig.rpcUrl,
+    accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+    chainId: ethereumConfig.chainId,
+    gasPrice: process.env.GAS_PRICE === 'auto' ? 'auto' : parseInt(process.env.GAS_PRICE)
+  };
+  config.networks.goerli = {
+    url: ethereumConfig.rpcUrl,
+    accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+    chainId: ethereumConfig.chainId,
+    gasPrice: process.env.GAS_PRICE === 'auto' ? 'auto' : parseInt(process.env.GAS_PRICE)
+  };
+  config.etherscan.apiKey.mainnet = process.env.ETHERSCAN_API_KEY;
+  config.etherscan.apiKey.goerli = process.env.ETHERSCAN_API_KEY;
+}
+
 // Export de la configuration
-module.exports = config; 
+module.exports = config;
