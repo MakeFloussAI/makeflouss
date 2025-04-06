@@ -1,0 +1,13 @@
+{
+  "name": "mfai-bridge",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "cd MFAI_MVP_Pitch_Test_API/frontend && npm start",
+    "build": "cd MFAI_MVP_Pitch_Test_API/frontend && npm run build",
+    "install": "cd MFAI_MVP_Pitch_Test_API/frontend && npm install"
+  },
+  "description": "MFAI Bridge Application",
+  "author": "",
+  "license": "ISC"
+} 

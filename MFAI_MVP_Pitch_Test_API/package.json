@@ -1,0 +1,51 @@
+{
+  "name": "mfai_mvp_pitch_test_api",
+  "version": "1.0.0",
+  "description": "This project implements a token and staking system for the MFAI platform, with cross-chain capabilities using LayerZero.",
+  "main": "hardhat.config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "npx hardhat test",
+    "build": "npx hardhat compile",
+    "clean": "npx hardhat clean",
+    "coverage": "npx hardhat coverage",
+    "check-env": "node scripts/check-env.js",
+    "node": "npx hardhat node",
+    
+    "deploy:local": "npx hardhat run scripts/deploy.js --network localhost",
+    "deploy:bsc-testnet": "npx hardhat run scripts/deploy.js --network bscTestnet",
+    "deploy:bsc-mainnet": "npx hardhat run scripts/deploy.js --network bsc",
+    "deploy:eth-testnet": "npx hardhat run scripts/deploy.js --network goerli",
+    "deploy:eth-mainnet": "npx hardhat run scripts/deploy.js --network ethereum",
+    
+    "verify:bsc-testnet": "npx hardhat verify --network bscTestnet",
+    "verify:bsc-mainnet": "npx hardhat verify --network bsc",
+    "verify:eth-testnet": "npx hardhat verify --network goerli",
+    "verify:eth-mainnet": "npx hardhat verify --network ethereum",
+    
+    "setup:local": "npx hardhat run scripts/setup-layerzero.js --network localhost",
+    "setup:bsc-testnet": "npx hardhat run scripts/setup-layerzero.js --network bscTestnet",
+    "setup:bsc-mainnet": "npx hardhat run scripts/setup-layerzero.js --network bsc",
+    "setup:eth-testnet": "npx hardhat run scripts/setup-layerzero.js --network goerli",
+    "setup:eth-mainnet": "npx hardhat run scripts/setup-layerzero.js --network ethereum",
+    
+    "test:cross-chain": "npx hardhat run scripts/test-cross-chain.js --network localhost",
+    "test:cross-chain:bsc": "npx hardhat run scripts/test-cross-chain.js --network bscTestnet",
+    "test:cross-chain:eth": "npx hardhat run scripts/test-cross-chain.js --network goerli"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@layerzerolabs/solidity-examples": "^1.1.0",
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
+    "@nomiclabs/hardhat-waffle": "^2.0.6",
+    "@openzeppelin/contracts": "^4.9.0",
+    "chai": "^5.2.0",
+    "ethereum-waffle": "^4.0.10",
+    "ethers": "^5.8.0",
+    "hardhat": "^2.22.19"
+  }
+}
